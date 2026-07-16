@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>成分メモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1F2EE; --panel:#FFFFFF; --frost:#E6E9E3;
+  --ink:#191C19; --ink2:#5B615B; --ink3:#8A908A;
+  --rule:#CBD0C8; --rule2:#A8AFA6;
+  --am:#2440C4; --am-bg:#E7EAF9;
+  --pm:#5B3A9B; --pm-bg:#EDE8F6;
+  --flag:#8F5300; --flag-bg:#F7EEDF;
+  --mincho:"Zen Old Mincho",serif;
+  --goth:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif;
+  --mono:"Roboto Mono","SFMono-Regular",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--goth);font-size:15px;line-height:1.8;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:40px 20px 80px}
+h1{font-family:var(--mincho);font-weight:700;font-size:30px;letter-spacing:.14em;margin:0 0 6px}
+.sub{font-size:13px;color:var(--ink2);margin:0 0 4px}
+.lot{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:.06em}
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:32px}
+h2{font-family:var(--mincho);font-weight:700;font-size:17px;letter-spacing:.08em;margin:34px 0 12px}
+.hint{font-size:12.5px;color:var(--ink2);margin:-6px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.opt{display:block;position:relative}
+.opt input{position:absolute;opacity:0;width:0;height:0}
+.opt span{display:block;padding:11px 13px;background:var(--panel);border:1px solid var(--rule);border-radius:3px;cursor:pointer;font-size:14px;transition:border-color .12s,background .12s}
+.opt span:hover{border-color:var(--rule2)}
+.opt input:checked+span{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.opt input:focus-visible+span{outline:2px solid var(--am);outline-offset:2px}
+.inline{display:flex;flex-wrap:wrap;gap:8px}
+.inline .opt span{padding:8px 16px;border-radius:999px}
+select{font-family:var(--goth);font-size:16px;padding:10px 12px;border:1px solid var(--rule);border-radius:3px;background:var(--panel);color:var(--ink);width:100%;max-width:340px}
+select:focus-visible{outline:2px solid var(--am);outline-offset:1px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:34px 0 0}
+button{font-family:var(--goth);font-size:14px;font-weight:500;padding:12px 26px;border-radius:3px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--paper);transition:opacity .12s}
+button:hover{opacity:.84}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--rule2)}
+button:focus-visible{outline:2px solid var(--am);outline-offset:2px}
+.err{font-size:13px;color:var(--flag);margin-top:12px}
+
+.label{background:var(--panel);border:1px solid var(--ink);border-radius:2px;margin:14px 0 0;overflow:hidden}
+.label-hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;background:var(--ink);color:var(--paper);padding:9px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.1em}
+.grp{border-top:1px solid var(--rule)}
+.grp:first-of-type{border-top:none}
+.grp-hd{display:flex;align-items:baseline;gap:10px;padding:10px 14px 4px}
+.grp-hd b{font-family:var(--mincho);font-size:14px;letter-spacing:.1em;font-weight:700}
+.grp-hd em{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--ink3)}
+.ent{padding:8px 14px 12px 14px;border-top:1px dotted var(--rule)}
+.ent:first-of-type{border-top:none}
+.ent-nm{font-family:var(--mono);font-size:14px;font-weight:500;line-height:1.5;word-break:break-word}
+.ent-alt{font-size:11.5px;color:var(--ink3);margin-top:1px}
+.ent-note{font-size:12.5px;color:var(--ink2);line-height:1.65;margin-top:5px}
+.freq{display:inline-block;font-family:var(--mono);font-size:10.5px;padding:1px 7px;border-radius:2px;margin-left:6px;vertical-align:1.5px}
+.f-am{background:var(--am-bg);color:var(--am)}
+.f-pm{background:var(--pm-bg);color:var(--pm)}
+
+.log{background:var(--flag-bg);border-left:3px solid var(--flag);padding:14px 16px;margin:14px 0 0}
+.log li{font-size:13.5px;line-height:1.75;margin-bottom:7px;color:#4A3200}
+.log li:last-child{margin-bottom:0}
+.log ul{margin:0;padding-left:18px}
+.log b{font-family:var(--mono);font-weight:500}
+
+.wk{margin-top:14px;border:1px solid var(--rule)}
+.wk-row{display:grid;grid-template-columns:44px 1fr 1fr;border-top:1px solid var(--rule);background:var(--panel)}
+.wk-row:first-child{border-top:none;background:var(--frost)}
+.wk-d{display:flex;align-items:center;justify-content:center;font-family:var(--mincho);font-size:15px;border-right:1px solid var(--rule)}
+.wk-c{padding:9px 12px;font-size:12.5px;line-height:1.7;border-right:1px solid var(--rule)}
+.wk-c:last-child{border-right:none}
+.wk-hd{padding:7px 12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;border-right:1px solid var(--rule)}
+.wk-hd:last-child{border-right:none}
+.step{color:var(--ink2)}
+.hero{font-family:var(--mono);font-size:12.5px}
+.hero.am{color:var(--am)}
+.hero.pm{color:var(--pm)}
+.rest{color:var(--ink3)}
+.spf{font-weight:500;color:var(--ink)}
+textarea{width:100%;font-family:var(--mono);font-size:16px;line-height:1.8;padding:12px;border:1px solid var(--rule);border-radius:3px;background:var(--panel);color:var(--ink);resize:vertical}
+textarea:focus-visible{outline:2px solid var(--am);outline-offset:1px}
+.chk{background:var(--panel);border:1px solid var(--ink);border-radius:2px;margin-top:14px;overflow:hidden}
+.chk-hd{background:var(--ink);color:var(--paper);padding:9px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;display:flex;justify-content:space-between}
+.hit{display:flex;gap:10px;padding:9px 14px;border-top:1px dotted var(--rule);font-size:13px;line-height:1.7;align-items:baseline}
+.hit:first-of-type{border-top:none}
+.hit i{font-family:var(--mono);font-style:normal;font-size:13px;width:14px;flex:none}
+.hit-nm{font-family:var(--mono);font-size:13px}
+.hit-pos{font-family:var(--mono);font-size:12px;margin-left:auto;flex:none;padding-left:12px;white-space:nowrap}
+.o i,.o .hit-pos{color:var(--am)}
+.x{color:var(--ink3)}
+.t i,.t .hit-pos{color:var(--flag)}
+.hit-sub{font-size:12px;color:var(--ink2);line-height:1.6;margin-top:3px}
+.band{font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:2px;background:var(--frost);color:var(--ink2);margin-left:6px}
+input[type=text]{width:100%;max-width:340px;font-family:var(--goth);font-size:16px;padding:10px 12px;border:1px solid var(--rule);border-radius:3px;background:var(--panel);color:var(--ink);margin-bottom:8px}
+input[type=text]:focus-visible{outline:2px solid var(--am);outline-offset:1px}
+.pcard{background:var(--panel);border:1px solid var(--rule);border-radius:3px;padding:11px 13px;margin-bottom:7px;display:flex;gap:12px;align-items:baseline}
+.pcard b{font-size:14px;font-weight:500;flex:none}
+.pcard .tags{flex:1;font-size:12px;color:var(--ink2);line-height:1.7}
+.pcard button{padding:4px 10px;font-size:12px;background:transparent;color:var(--ink3);border-color:var(--rule);flex:none}
+.tg{display:inline-block;font-family:var(--mono);font-size:11px;padding:1px 7px;border-radius:2px;margin:0 4px 3px 0;background:var(--frost);color:var(--ink2)}
+.tg.s{background:var(--pm-bg);color:var(--pm)}
+.tg.a{background:var(--am-bg);color:var(--am)}
+.arow{display:flex;gap:8px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--rule)}
+.arow:first-child{border-top:none}
+.aday{font-family:var(--mincho);font-size:15px;width:24px;flex:none;padding-top:4px}
+.achips{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+.achips label{position:relative}
+.achips input{position:absolute;opacity:0;width:0;height:0}
+.achips span{display:block;padding:4px 11px;font-size:12.5px;border:1px solid var(--rule);border-radius:999px;background:var(--panel);cursor:pointer}
+.achips input:checked+span{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.achips input:focus-visible+span{outline:2px solid var(--am);outline-offset:2px}
+.nrow{padding:10px 14px;border-top:1px dotted var(--rule);font-size:13px;line-height:1.7}
+.nrow:first-of-type{border-top:none}
+.nrow b{font-family:var(--mincho);font-size:15px;font-weight:700;margin-right:10px}
+.nrow .who{font-family:var(--mono);font-size:12.5px}
+.nrow .warn{font-size:12px;color:var(--flag);margin-top:3px}
+.nrow.free b,.nrow.free{color:var(--ink3)}
+details.sec{border-top:1px solid var(--rule);margin-top:34px;padding-top:2px}
+details.sec>summary{font-family:var(--mincho);font-weight:700;font-size:17px;letter-spacing:.08em;padding:14px 0;cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:'＋';font-family:var(--mono);font-size:14px;color:var(--ink3)}
+details.sec[open]>summary::before{content:'−'}
+details.sec>summary em{font-style:normal;font-family:var(--goth);font-weight:400;font-size:12px;color:var(--ink3);letter-spacing:0}
+details.sec>summary:focus-visible{outline:2px solid var(--am);outline-offset:2px}
+.foot{font-size:12px;color:var(--ink2);line-height:1.8;border-top:1px solid var(--rule);margin-top:40px;padding-top:16px}
+#out{display:none}
+#out.on{display:block;animation:fade .25s ease-out}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:560px){
+  .wrap{padding:26px 14px 60px} h1{font-size:24px}
+  .wk-row{grid-template-columns:34px 1fr 1fr}
+}
+@media print{
+  body{background:#fff} .wrap{max-width:none;padding:0}
+  #form,.actions,#trouble,input,textarea,select,#assign,.pcard button,#stack>p.hint,details>summary{display:none}
+  details{display:block}details:not([open])>*{display:none}details:not([open]){display:none}
+  .label,.wk,.chk{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="masthead">
+  <h1>成分メモ</h1>
+  <p class="sub">気になるところから、ボトルの裏で探す名前と、一週間の順番をつくります。</p>
+  <p class="lot" id="lot"></p>
+</div>
+
+<div id="form">
+  <h2>【気になるところ】</h2>
+  <p class="hint">あてはまるものを選んでください。複数可。</p>
+  <div class="grid" id="c-grid"></div>
+
+  <h2>【いま一番なんとかしたいもの】</h2>
+  <p class="hint">競合したときに、どれを優先して残すかの基準になります。</p>
+  <select id="prio"><option value="">上で選ぶと出ます</option></select>
+
+  <h2>【肌のベース】</h2>
+  <p class="hint">攻めの成分をどこまで許容できるかが変わります。</p>
+  <div class="inline" id="b-grid"></div>
+
+  <h2>【慣れ】</h2>
+  <p class="hint">レチノールや酸を今まで使ってきたかどうか。</p>
+  <div class="inline" id="x-grid"></div>
+
+  <div class="actions">
+    <button id="go">成分を出す</button>
+    <button class="ghost" id="clr">最初から</button>
+  </div>
+  <p class="err" id="err"></p>
+</div>
+
+<div id="out"></div>
+
+<details class="sec" id="stack">
+  <summary>【使っている製品で、実際を確かめる】<em>開くと登録・割り当て・保存</em></summary>
+  <h2 style="margin-top:8px">【使っている製品を登録する】</h2>
+  <p class="hint">名前と全成分を貼ると、その製品に何が入っているかを読み取ります。名前は自分がわかれば何でもかまいません。</p>
+  <input type="text" id="pname" placeholder="ピンククリーム">
+  <textarea id="ptext" rows="4" placeholder="水、BG、グリセリン、レチノール、…"></textarea>
+  <div class="actions"><button id="padd">登録する</button></div>
+  <p class="err" id="perr"></p>
+  <div id="plist"></div>
+
+  <h2>【夜に割り当てる】</h2>
+  <p class="hint">その夜に使う製品を、ぜんぶ選んでください。化粧水もクリームもパックも、肌に乗るものは同じです。</p>
+  <div id="assign"></div>
+  <div class="actions"><button id="calc">その夜に乗るものを見る</button></div>
+  <div id="stackout"></div>
+
+  <h2>【登録したものを保存する】</h2>
+  <p class="hint">書き出したテキストをメモ帳などに残しておけば、次に開いたときに読み込めます。友達に渡すこともできます。</p>
+  <textarea id="io" rows="3" placeholder="ここに書き出されます"></textarea>
+  <div class="actions"><button id="exp">書き出す</button><button class="ghost" id="imp">読み込む</button></div>
+</details>
+
+<details class="sec" id="trouble">
+  <summary>【赤みやヒリつきが出たときは】<em>困ったときに開くところ</em></summary>
+  <p class="hint" style="margin-top:8px">上で製品を登録して夜に割り当ててあると、直前に何が乗っていたかから一緒に考えられます。原因を当てることはできないので、「このへんかも」と「まず何を休むか」までのお手伝いです。</p>
+  <p class="hint" style="margin-bottom:6px">いつごろ気になりましたか</p>
+  <select id="tday"></select>
+  <p class="hint" style="margin:14px 0 6px">どんな感じですか（いくつでも）</p>
+  <div class="inline" id="tsym"></div>
+  <div class="actions"><button id="tgo">見てみる</button></div>
+  <div id="tout"></div>
+</details>
+
+<p class="foot">
+  一般的な成分の組み立て方をまとめたものです。診断でも治療でもありません。<br>
+  新しい成分は少量・低頻度から始めて、しみる・赤くなる・皮がむけるが続くときは中止してください。<br>
+  妊娠中・授乳中の方、皮膚科で治療中の方は、レチノイドと酸について必ず主治医に確認を。<br>
+  濃度は成分名からはわかりません。日本の化粧品は濃度非表示がほとんどです。
+</p>
+
+</div>
+<script>
+var CONCERNS={
+ dry  :{l:'乾燥・つっぱり',   g:['ceramide','ha','glycerin','squalane']},
+ oil  :{l:'テカリ・皮脂',     g:['niacinamide','bha']},
+ pore :{l:'毛穴の開き・黒ずみ',g:['bha','retinoid','niacinamide']},
+ acne :{l:'ニキビ・吹き出物', g:['bha','azelaic','niacinamide']},
+ sens :{l:'赤み・敏感',       g:['cica','panthenol','allantoin','ceramide']},
+ spot :{l:'シミ・くすみ',     g:['vitc','tranexamic','arbutin']},
+ age  :{l:'シワ・ハリ不足',   g:['retinoid','peptide','vitc']},
+ rough:{l:'ざらつき・角質',   g:['aha','urea','ceramide']}
+};
+var ING={
+ ceramide:{n:['セラミドNP','セラミドAP','セラミドEOP'],a:'いわゆる「セラミド」',s:'both',t:'base',
+   d:'角層のすき間を埋めて、水分を抱えたままにしてくれる脂質です。成分表では必ず記号がつくので、「セラミドNP」のように探してみてください。'},
+ ha:{n:['ヒアルロン酸Na','加水分解ヒアルロン酸'],a:'ヒアルロン酸',s:'both',t:'base',
+   d:'水を抱えてくれる係です。上から油分でフタをすると力を発揮します。単体だと、乾いた日には水分が逃げてしまうこともあります。'},
+ glycerin:{n:['グリセリン'],a:'保湿のベース',s:'both',t:'base',
+   d:'保湿のいちばん基本の材料です。成分表の上のほうにあるほど、その製品の保湿を主に担っています。よく隣に並ぶBGは別の成分ですが、役割は近い仲間です。'},
+ squalane:{n:['スクワラン'],a:'',s:'pm',t:'base',
+   d:'水分を逃がさないためのフタ役です。順番としては最後に重ねます。'},
+ niacinamide:{n:['ナイアシンアミド'],a:'',s:'both',t:'base',
+   d:'2%前後だと皮脂やバリア、5%以上だと色ムラと、濃度によって得意なことが変わります。日本の製品は濃度を書いていないことが多いので、名前だけでは分からない部分が残ります。'},
+ cica:{n:['ツボクサエキス','マデカッソシド','アジアチコシド'],a:'いわゆる「CICA」',s:'both',t:'base',
+   d:'「CICA」はパッケージ側での呼び名です。成分表には左の名前で載っているので、裏を見るときはこちらを探してください。'},
+ panthenol:{n:['パンテノール','DL-パンテノール'],a:'プロビタミンB5',s:'both',t:'base',
+   d:'水分保持と、荒れたときの落ち着かせ役を兼ねます。刺激が少ないので、ほかの成分とぶつかりにくいのも助かります。'},
+ allantoin:{n:['アラントイン'],a:'',s:'both',t:'base',
+   d:'荒れを抑える定番です。医薬部外品では有効成分として書かれていることもあります。'},
+ urea:{n:['尿素'],a:'',s:'pm',t:'base',
+   d:'保湿と、硬くなった角質をやわらかくする働きを兼ねます。ボディ用の高濃度（10〜20%）は顔には強いので、顔用と分けて考えてください。'},
+ peptide:{n:['パルミトイルトリペプチド-1','アセチルヘキサペプチド-8'],a:'ペプチド',s:'pm',t:'base',
+   d:'刺激がほとんどないので、レチノイドと同じ夜に重ねられます。効き方はおだやかで、長く続けるほど応えてくれるタイプです。'},
+ arbutin:{n:['アルブチン','α-アルブチン'],a:'',s:'am',t:'mid',
+   d:'メラニンを作る酵素にはたらきかけます。α-のほうが効率がよいとされています。'},
+ tranexamic:{n:['トラネキサム酸'],a:'',s:'am',t:'mid',
+   d:'炎症をきっかけにできた色ムラに向いています。日本では医薬部外品の有効成分として入っていることが多いです。'},
+ vitc:{s:'am',t:'act',v:{
+   strong:{n:['アスコルビン酸','L-アスコルビン酸'],a:'純粋ビタミンC',
+     d:'肌の中で変換する必要がないぶん、いちばん早く働きます。そのかわり酸性なので刺激が出ることがあり、茶色く変色したら劣化のサインです。'},
+   mid:{n:['3-O-エチルアスコルビン酸','パルミチン酸アスコルビルリン酸3Na'],a:'浸透型の誘導体',
+     d:'安定していて、刺激も中くらいです。右はAPPSと呼ばれるもので、油にも水にもなじみます。'},
+   mild:{n:['リン酸アスコルビルMg','アスコルビルグルコシド'],a:'穏やかな誘導体',
+     d:'刺激がほとんどないかわりに、肌の中でビタミンCに変わる手間があるぶん、効き方はゆっくりです。最初の一本に向いています。'}}},
+ retinoid:{s:'pm',t:'str',b:3,v:{
+   strong:{n:['レチナール','レチンアルデヒド'],a:'',
+     d:'レチノールより一段手前まで変換が済んでいるので、効きも反応も強めです。日本の市販品ではまだ数が少なめ。'},
+   mid:{n:['レチノール'],a:'',
+     d:'A反応（赤み・皮むけ・ヒリつき）が出やすいのは主にこの段です。低濃度から始めて、頻度を上げるのは1か月くらいの間隔で。'},
+   mild:{n:['パルミチン酸レチノール','酢酸レチノール'],a:'レチノール誘導体',
+     d:'肌の中で何段階か変換されてから働くので、おだやかなぶんゆっくりです。最初の一本には向いています。'}}},
+ bha:{n:['サリチル酸'],a:'BHA',s:'pm',t:'str',b:3,
+   d:'油になじむので、毛穴の内側まで届きます。日本の化粧品では0.2%が上限なので、海外製の2%とは効き方がかなり違います。'},
+ aha:{n:['グリコール酸','乳酸'],a:'AHA',s:'pm',t:'str',b:3,
+   d:'表面の古い角質をゆるめます。乳酸のほうが分子が大きくおだやかです。使った翌日は日焼けしやすくなるので、日焼け止めをいつもより丁寧に。'},
+ azelaic:{n:['アゼライン酸','ポタシウムアゼロイルジグリシネート'],a:'',s:'pm',t:'str',b:2,
+   d:'ニキビと赤みの両方に向かってくれる、珍しい枠です。日本の化粧品では右の誘導体で入っていることが多く、そのぶんおだやかになります。'}
+};
+var DAYS=['月','火','水','木','金','土','日'];
+var BASE=[['normal','ふつう'],['dry','乾燥寄り'],['oily','脂性寄り'],['sens','ゆらぎやすい']];
+var EXP=[['none','はじめて'],['some','少し使ったことがある'],['much','慣れている']];
+var LV={none:'mild',some:'mid',much:'strong'};
+var FQ={mild:1,mid:2,strong:3};
+var sel={},base='normal',exp='none',CUR=null;
+var MARK=['カルボマー','キサンタンガム','フェノキシエタノール','ヒドロキシエチルセルロース','EDTA-2Na','エデト酸2Na','水酸化K','水酸化Na','クエン酸','クエン酸Na','香料','トコフェロール','メチルパラベン'];
+
+function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+var d=new Date();
+document.getElementById('lot').textContent='LOT '+d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+
+var cg=document.getElementById('c-grid');
+Object.keys(CONCERNS).forEach(function(k){
+  var lab=el('label','opt');
+  lab.innerHTML='<input type="checkbox" value="'+k+'"><span>'+CONCERNS[k].l+'</span>';
+  lab.querySelector('input').addEventListener('change',function(){
+    if(this.checked)sel[k]=1;else delete sel[k];
+    refreshPrio();
+  });
+  cg.appendChild(lab);
+});
+function radios(host,arr,cur,cb){
+  host.innerHTML='';
+  arr.forEach(function(p){
+    var lab=el('label','opt');
+    lab.innerHTML='<input type="radio" name="'+host.id+'" value="'+p[0]+'"'+(p[0]===cur?' checked':'')+'><span>'+p[1]+'</span>';
+    lab.querySelector('input').addEventListener('change',function(){cb(p[0]);});
+    host.appendChild(lab);
+  });
+}
+radios(document.getElementById('b-grid'),BASE,base,function(v){base=v;});
+radios(document.getElementById('x-grid'),EXP,exp,function(v){exp=v;});
+
+function refreshPrio(){
+  var s=document.getElementById('prio'),keep=s.value;
+  s.innerHTML='';
+  var ks=Object.keys(sel);
+  if(!ks.length){s.innerHTML='<option value="">上で選ぶと出ます</option>';return;}
+  ks.forEach(function(k){
+    var o=document.createElement('option');o.value=k;o.textContent=CONCERNS[k].l;s.appendChild(o);
+  });
+  s.value=sel[keep]?keep:ks[0];
+}
+
+function pick(id,lv){var g=ING[id];return g.v?g.v[lv]:g;}
+
+function build(){
+  var ks=Object.keys(sel),log=[];
+  var prio=document.getElementById('prio').value||ks[0];
+  var lv=LV[exp];
+
+  var order=ks.slice().sort(function(a,b){return (a===prio?-1:0)-(b===prio?-1:0);});
+  var ids=[],src={};
+  order.forEach(function(k){CONCERNS[k].g.forEach(function(i){
+    if(ids.indexOf(i)<0)ids.push(i);
+    if(!src[i])src[i]=[];
+    if(src[i].indexOf(k)<0)src[i].push(k);
+  });});
+
+  var vlv={vitc:lv,retinoid:lv};
+
+  if(sel.sens){
+    if(ids.indexOf('aha')>=0&&prio!=='rough'){
+      ids.splice(ids.indexOf('aha'),1);
+      log.push('<b>グリコール酸・乳酸は、今回は入れていません。</b>赤みや敏感さが気になるときに角質をはがす方向を足すと、しみたり赤くなったりしやすいためです。ざらつきには尿素とセラミドで、水分側からゆっくり近づく組み立てにしました。落ち着いてきたら、あらためて足せます。');
+    }
+    if(ids.indexOf('retinoid')>=0&&vlv.retinoid!=='mild'){
+      vlv.retinoid='mild';
+      log.push('<b>レチノイドを一段おだやかにしました。</b>レチノールではなく、パルミチン酸レチノールから始める形です。効き方はゆっくりになりますが、赤みが出ている肌に強いものを入れると、続けるのがつらくなってしまいます。慣れてきたら上げられます。');
+    }
+    if(ids.indexOf('vitc')>=0&&vlv.vitc==='strong'){
+      vlv.vitc='mid';
+      log.push('<b>ビタミンCを誘導体にしました。</b>純粋アスコルビン酸は酸性が強めなので、敏感なときは誘導体のほうが続けやすいためです。');
+    }
+  }
+  if(ids.indexOf('aha')>=0&&ids.indexOf('bha')>=0){
+    var drop=(prio==='rough')?'bha':'aha';
+    ids.splice(ids.indexOf(drop),1);
+    log.push('<b>'+(drop==='aha'?'グリコール酸・乳酸':'サリチル酸')+'は、今回は入れていません。</b>AHAとBHAは役割が重なるので、同じ週に両方入れると角質を削りすぎてしまいます。「'+CONCERNS[prio].l+'」を優先したいとのことだったので、'+(drop==='aha'?'毛穴の内側まで届くサリチル酸':'表面にはたらくグリコール酸')+'のほうを残しました。');
+  }
+
+  var act=ids.filter(function(i){return ING[i].t==='str';});
+  var freq={};
+  act.forEach(function(i){freq[i]=Math.min(ING[i].b,FQ[lv]);});
+
+  if(base==='dry'||base==='sens'||sel.dry||sel.sens){
+    var why=(base==='sens'||sel.sens)?'ゆらぎやすい':'乾燥寄り';
+    act.forEach(function(i){ if(freq[i]>1){freq[i]--;} });
+    if(act.length)log.push('<b>攻めの回数を、それぞれ1回ずつ減らしました。</b>肌のベースが'+why+'とのことなので、バリアが戻る夜を先に確保しています。1か月ほど続けて物足りなければ、そこから増やしてみてください。');
+  }
+
+  var total=function(){return act.reduce(function(s,i){return s+freq[i];},0);};
+  while(total()>5&&act.length){
+    var last=act[act.length-1];
+    if(freq[last]>1){freq[last]--;}
+    else{
+      act.pop();delete freq[last];
+      log.push('<b>'+pick(last,vlv[last]||'mid').n[0]+'は、今回は入れていません。</b>攻めが増えすぎて、休ませる夜が2日を切ってしまうためです。「'+CONCERNS[src[last][0]].l+'」に向けた枠でした。ほかが落ち着いてきたら、入れ替えで足せます。');
+      ids.splice(ids.indexOf(last),1);
+    }
+  }
+
+  var night=[null,null,null,null,null,null,null];
+  act.forEach(function(i){
+    for(var c=0;c<freq[i];c++){
+      var best=-1,bs=-1;
+      for(var n=0;n<7;n++){
+        if(night[n])continue;
+        var m=99;
+        for(var k=0;k<7;k++){if(night[k]){var dd=Math.min(Math.abs(n-k),7-Math.abs(n-k));if(dd<m)m=dd;}}
+        if(m>bs){bs=m;best=n;}
+      }
+      if(best>=0)night[best]=i;
+    }
+  });
+
+  var amAct=ids.filter(function(i){return ING[i].s==='am'&&ING[i].t!=='base';});
+  var mildAM=ids.filter(function(i){return ING[i].t==='base'&&ING[i].s!=='pm';});
+  var mildPM=ids.filter(function(i){return ING[i].t==='base'&&ING[i].s!=='am';});
+
+  render(ids,vlv,freq,night,amAct,mildAM,mildPM,log,src);
+}
+
+function entry(id,lv,fq){
+  var g=pick(id,lv),h='';
+  h+='<div class="ent"><div class="ent-nm">'+esc(g.n[0]);
+  if(fq)h+='<span class="freq '+(ING[id].s==='am'?'f-am':'f-pm')+'">週'+fq+'</span>';
+  h+='</div>';
+  var alt=g.n.slice(1);
+  if(alt.length||g.a)h+='<div class="ent-alt">'+(g.a?esc(g.a):'')+(g.a&&alt.length?'／':'')+(alt.length?'または '+alt.map(esc).join('・'):'')+'</div>';
+  if(g.d)h+='<div class="ent-note">'+esc(g.d)+'</div>';
+  return h+'</div>';
+}
+
+function render(ids,vlv,freq,night,amAct,mildAM,mildPM,log,src){
+  var o=document.getElementById('out'),h='';
+  var lot=document.getElementById('lot').textContent;
+
+  h+='<h2>【成分表で探す名前】</h2>';
+  h+='<p class="hint">左が成分表示に載っている名前です。この名前で裏を探してください。</p>';
+  h+='<div class="label"><div class="label-hd"><span>INGREDIENTS</span><span>'+lot+'</span></div>';
+
+  var groups=[
+    ['朝に使う','AM',amAct],
+    ['夜に使う','PM',ids.filter(function(i){return ING[i].t==='str';})],
+    ['朝晩どちらでも','BASE',ids.filter(function(i){return ING[i].t==='base'||ING[i].t==='mid';})]
+  ];
+  groups.forEach(function(g){
+    if(!g[2].length)return;
+    h+='<div class="grp"><div class="grp-hd"><b>'+g[0]+'</b><em>'+g[1]+'</em></div>';
+    g[2].forEach(function(i){h+=entry(i,vlv[i]||'mid',freq[i]);});
+    h+='</div>';
+  });
+  h+='</div>';
+
+  if(log.length){
+    h+='<h2>【今回、見送ったこと】</h2>';
+    h+='<p class="hint">選んだ悩みどうしがぶつかったところと、その理由です。何を足したかと同じくらい、ここが効いてきます。</p>';
+    h+='<div class="log"><ul>';
+    log.forEach(function(x){h+='<li>'+x+'</li>';});
+    h+='</ul></div>';
+  }
+
+  h+='<h2>【一週間】</h2>';
+  var amLine='<div class="step">洗顔</div>'
+    +(amAct.length?'<div class="hero am">'+amAct.map(function(i){return esc(pick(i,vlv[i]||'mid').n[0]);}).join('<br>')+'</div>':'')
+    +(mildAM.length?'<div class="step">'+mildAM.slice(0,2).map(function(i){return esc(pick(i,'mid').n[0]);}).join('・')+'</div>':'')
+    +'<div class="step">保湿</div><div class="spf">日焼け止め</div>';
+
+  h+='<div class="wk"><div class="wk-row"><div class="wk-hd"></div><div class="wk-hd">MORNING</div><div class="wk-hd">NIGHT</div></div>';
+  for(var n=0;n<7;n++){
+    var a=night[n];
+    var pmLine='<div class="step">クレンジング・洗顔</div>'
+      +(a?'<div class="hero pm">'+esc(pick(a,vlv[a]||'mid').n[0])+'</div>'
+         :'<div class="rest">休ませる夜</div>')
+      +(mildPM.length?'<div class="step">'+mildPM.slice(0,3).map(function(i){return esc(pick(i,'mid').n[0]);}).join('・')+'</div>':'')
+      +'<div class="step">保湿</div>';
+    h+='<div class="wk-row"><div class="wk-d">'+DAYS[n]+'</div><div class="wk-c">'+amLine+'</div><div class="wk-c">'+pmLine+'</div></div>';
+  }
+  h+='</div>';
+
+  var rest=night.filter(function(x){return !x;}).length;
+  h+='<p class="hint" style="margin-top:12px">休ませる夜は'+rest+'日あります。ここでバリアが戻るので、攻めの成分もこの夜があってはじめて働けます。</p>';
+
+  h+='<h2>【買うときのメモ】</h2><div class="log" style="border-left-color:var(--ink2);background:var(--frost)"><ul>';
+  h+='<li>成分表は<b>配合量の多い順</b>に並びます。ただし1%以下のものは順不同でよいことになっているので、後ろのほうは順番どおりとは限りません。探している名前がずっと後ろにあるときは、少しだけ入っている、と読みます。</li>';
+  h+='<li>表の大きな文字は、その製品がいちばん伝えたいこと。裏の小さな文字は、入っているものの全部です。気になったら裏で確かめる、くらいがちょうどいいと思います。</li>';
+  h+='<li>新しい成分は<b>一度にひとつずつ</b>足すと安心です。ふたつ同時だと、肌が変わったときにどちらのおかげか、どちらのせいかが分からなくなります。</li>';
+  h+='<li>朝の日焼け止めは、ここに並んだどの成分よりも確実に効きます。ほかを全部やめても、これだけは続ける価値があります。</li>';
+  h+='</ul></div>';
+
+  h+='<h2>【製品の全成分を貼って確かめる】</h2>';
+  h+='<p class="hint">気になる製品を見つけたら、商品ページやメーカーサイトから全成分をコピーして貼ってください。上の名前が並びの何番目にあるかをお返しします。写真は読み取れないので、テキストでお願いします。</p>';
+  h+='<textarea id="paste" rows="5" placeholder="水、BG、グリセリン、ナイアシンアミド、…"></textarea>';
+  h+='<div class="actions"><button id="chk">照合する</button></div><div id="chkout"></div>';
+
+  h+='<div class="actions"><button onclick="window.print()">印刷・PDFで保存</button><button class="ghost" onclick="document.getElementById(\'form\').scrollIntoView({behavior:\'smooth\'})">条件を変える</button></div>';
+
+  o.innerHTML=h;o.className='on';
+  CUR={ids:ids,vlv:vlv};
+  document.getElementById('chk').addEventListener('click',check);
+  o.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function norm(s){
+  return String(s)
+    .replace(/[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);})
+    .replace(/[\u2010-\u2015\u2212]/g,'-')
+    .replace(/[\s\u3000]/g,'')
+    .toUpperCase();
+}
+function parseList(t){
+  t=t.replace(/【[^】]*】/g,' ').replace(/^[\s\S]{0,12}?[全]?成分[\s]*[:：]/,' ');
+  var out=[];
+  t.split(/[、,，・;；\n\r\t\/\uFF0F\u30FB\uFF65|｜]+/).forEach(function(x){
+    x=x.replace(/^[\s]*[\d０-９]{1,2}[\.．)）]\s*/,'').replace(/^[（(]|[）)]$/g,'').trim();
+    if(x.length&&x.length<40)out.push({raw:x,n:norm(x)});
+  });
+  return out;
+}
+function findIn(list,names){
+  var ex=null,nr=null;
+  names.forEach(function(nm){
+    var N=norm(nm);
+    list.forEach(function(e,i){
+      if(e.n===N){if(!ex||i<ex.i)ex={i:i,e:e,nm:nm};}
+      else if(e.n.length>N.length&&e.n.indexOf(N)>=0){if(!nr||i<nr.i)nr={i:i,e:e,nm:nm};}
+    });
+  });
+  return {ex:ex,nr:nr};
+}
+function findAll(list,names){
+  var out=[];
+  names.forEach(function(nm){
+    var N=norm(nm);
+    list.forEach(function(e,i){
+      var dup=false;
+      out.forEach(function(x){if(x.i===i)dup=true;});
+      if(e.n===N&&!dup)out.push({i:i,e:e,nm:nm});
+    });
+  });
+  out.sort(function(a,b){return a.i-b.i;});
+  return out;
+}
+function levelOf(id,nm){
+  var g=ING[id],r=null;
+  if(!g.v)return null;
+  Object.keys(g.v).forEach(function(k){if(g.v[k].n.indexOf(nm)>=0)r=k;});
+  return r;
+}
+var LVJ={strong:'一番強い段',mid:'中間の段',mild:'穏やかな段'};
+function allNames(id){
+  var g=ING[id],out=[];
+  if(g.v)Object.keys(g.v).forEach(function(k){out=out.concat(g.v[k].n);});
+  else out=g.n.slice();
+  return out;
+}
+function check(){
+  var t=document.getElementById('paste').value,box=document.getElementById('chkout');
+  var list=parseList(t);
+  if(list.length<3){box.innerHTML='<p class="err">うまく読み取れませんでした。「水、BG、グリセリン、…」のように、読点かカンマで区切られたテキストを貼ってみてください。</p>';return;}
+
+  var line=-1;
+  MARK.forEach(function(m){
+    var N=norm(m);
+    list.forEach(function(e,i){if(e.n===N&&(line<0||i<line))line=i;});
+  });
+
+  function band(i){
+    if(line>=0&&i>line)return '<span class="band">1%以下かも</span>';
+    if(i<3)return '<span class="band">ベース</span>';
+    return '';
+  }
+  var h='<div class="chk"><div class="chk-hd"><span>CHECK</span><span>全'+list.length+'成分</span></div>';
+
+  CUR.ids.forEach(function(id){
+    var lv=CUR.vlv[id]||'mid',g=pick(id,lv);
+    if(ING[id].v){
+      var hits=findAll(list,allNames(id));
+      if(hits.length){
+        hits.forEach(function(x){
+          var k=levelOf(id,x.nm);
+          if(k===lv){
+            h+='<div class="hit o"><i>○</i><div><span class="hit-nm">'+esc(x.e.raw)+'</span>'+band(x.i)+'</div><span class="hit-pos">'+(x.i+1)+'番目</span></div>';
+          }else{
+            h+='<div class="hit t"><i>△</i><div><span class="hit-nm">'+esc(x.e.raw)+'</span>'+band(x.i)+'<div class="hit-sub">'+esc(ING[id].v[k].a||g.n[0])+'。今回想定していた「'+esc(g.n[0])+'」とは別の段（'+LVJ[k]+'）です。</div></div><span class="hit-pos">'+(x.i+1)+'番目</span></div>';
+          }
+        });
+        if(hits.length>1)h+='<div class="hit x"><i>&nbsp;</i><div class="hit-sub" style="margin:0">同じ系統が'+hits.length+'種類入っています。段の違うものを混ぜて、速さとおだやかさの両方を取りにいく作りです。</div></div>';
+        return;
+      }
+    }
+    var r=findIn(list,g.n);
+    if(r.ex){
+      h+='<div class="hit o"><i>○</i><div><span class="hit-nm">'+esc(r.ex.e.raw)+'</span>'+band(r.ex.i)+'</div><span class="hit-pos">'+(r.ex.i+1)+'番目</span></div>';
+    }else if(r.nr){
+      h+='<div class="hit t"><i>△</i><div><span class="hit-nm">'+esc(r.nr.e.raw)+'</span>'+band(r.nr.i)+'<div class="hit-sub">探していたのは「'+esc(r.nr.nm)+'」です。名前は似ていますが、肌の中で働くまでの段が違います。効き方もおだやかさも変わるので、別のものとして読んでください。</div></div><span class="hit-pos">'+(r.nr.i+1)+'番目</span></div>';
+    }else{
+      h+='<div class="hit x"><i>—</i><div><span class="hit-nm">'+esc(g.n[0])+'</span></div><span class="hit-pos">なし</span></div>';
+    }
+  });
+
+  var extra='';
+  Object.keys(ING).forEach(function(id){
+    if(CUR.ids.indexOf(id)>=0)return;
+    if(ING[id].t!=='str'&&ING[id].t!=='act')return;
+    var r=findIn(list,allNames(id));
+    if(r.ex)extra+='<div class="hit t"><i>!</i><div><span class="hit-nm">'+esc(r.ex.e.raw)+'</span>'+band(r.ex.i)+'<div class="hit-sub">今回の組み立てには入れていない、攻めの成分です。使うなら、ほかの攻めと同じ夜に重ならないか見てみてください。</div></div><span class="hit-pos">'+(r.ex.i+1)+'番目</span></div>';
+  });
+  h+=extra+'</div>';
+
+  h+='<div class="log" style="border-left-color:var(--ink2);background:var(--frost)"><ul>';
+  if(line>=0)h+='<li><b>1%ラインの目安は'+(line+1)+'番目あたり。</b>「'+esc(list[line].raw)+'」は少量でしか使わない成分なので、これより後ろはだいたい1%以下と読めます。法律で決まった線ではなく、読み方のコツです。</li>';
+  else h+='<li><b>1%ラインは今回わかりませんでした。</b>目印になる成分（カルボマー、キサンタンガム、フェノキシエタノールなど）が見当たらないためです。番号だけで読んでみてください。</li>';
+  h+='<li>1%以下の成分は<b>順不同で書いてよい</b>ことになっています。後ろのほうの並びは量の順ではありません。</li>';
+  h+='<li>ここに出るのは<b>位置だけ</b>です。良い製品かどうかは判断していません。入っているか、前のほうか後ろのほうか。それを見て決めるのは、あなたです。</li>';
+  h+='</ul></div>';
+  box.innerHTML=h;
+}
+
+var PROD=[],ASSIGN=[[],[],[],[],[],[],[]],PID=1;
+var RET='retinoid',EXFO=['bha','aha'],GENTLE=['azelaic'];
+
+function scanProduct(list){
+  var f=[];
+  Object.keys(ING).forEach(function(id){
+    var g=ING[id];
+    if(g.v){
+      Object.keys(g.v).forEach(function(k){
+        findAll(list,g.v[k].n).forEach(function(x){f.push({id:id,lv:k,i:x.i,raw:x.e.raw});});
+      });
+    }else{
+      findAll(list,g.n).forEach(function(x){f.push({id:id,lv:null,i:x.i,raw:x.e.raw});});
+    }
+  });
+  f.sort(function(a,b){return a.i-b.i;});
+  return f;
+}
+function pAdd(){
+  var nm=document.getElementById('pname').value.trim();
+  var tx=document.getElementById('ptext').value;
+  var e=document.getElementById('perr');
+  var list=parseList(tx);
+  if(!nm){e.textContent='製品の名前を入力してください。自分がわかれば何でもかまいません。';return;}
+  if(list.length<3){e.textContent='全成分がうまく読み取れませんでした。「水、BG、グリセリン、…」のように区切られたテキストを貼ってみてください。';return;}
+  e.textContent='';
+  PROD.push({id:PID++,name:nm,text:tx,list:list,found:scanProduct(list)});
+  document.getElementById('pname').value='';document.getElementById('ptext').value='';
+  renderProd();renderAssign();
+}
+function pTags(p){
+  var h='',seen={};
+  p.found.forEach(function(x){
+    if(ING[x.id].t!=='str'&&ING[x.id].t!=='act')return;
+    var key=x.id+(x.lv||'');
+    if(seen[key])return;seen[key]=1;
+    h+='<span class="tg '+(ING[x.id].s==='am'?'a':'s')+'">'+esc(x.raw)+'</span>';
+  });
+  var base=0;
+  p.found.forEach(function(x){if(ING[x.id].t==='base')base++;});
+  if(base)h+='<span class="tg">保湿・鎮静 '+base+'種</span>';
+  return h||'<span class="tg">攻めの成分は見あたりません</span>';
+}
+function renderProd(){
+  var b=document.getElementById('plist');
+  if(!PROD.length){b.innerHTML='<p class="hint">まだ登録がありません。</p>';return;}
+  var h='';
+  PROD.forEach(function(p){
+    h+='<div class="pcard"><b>'+esc(p.name)+'</b><div class="tags">'+pTags(p)+'</div><button data-del="'+p.id+'">はずす</button></div>';
+  });
+  b.innerHTML=h;
+  b.querySelectorAll('[data-del]').forEach(function(x){
+    x.addEventListener('click',function(){
+      var id=+this.getAttribute('data-del');
+      PROD=PROD.filter(function(p){return p.id!==id;});
+      ASSIGN=ASSIGN.map(function(a){return a.filter(function(z){return z!==id;});});
+      renderProd();renderAssign();document.getElementById('stackout').innerHTML='';
+    });
+  });
+}
+function renderAssign(){
+  var b=document.getElementById('assign');
+  if(!PROD.length){b.innerHTML='<p class="hint">先に製品を登録してください。</p>';return;}
+  var h='';
+  for(var n=0;n<7;n++){
+    h+='<div class="arow"><div class="aday">'+DAYS[n]+'</div><div class="achips">';
+    PROD.forEach(function(p){
+      var on=ASSIGN[n].indexOf(p.id)>=0;
+      h+='<label><input type="checkbox" data-n="'+n+'" data-p="'+p.id+'"'+(on?' checked':'')+'><span>'+esc(p.name)+'</span></label>';
+    });
+    h+='</div></div>';
+  }
+  b.innerHTML=h;
+  b.querySelectorAll('input').forEach(function(x){
+    x.addEventListener('change',function(){
+      var n=+this.getAttribute('data-n'),p=+this.getAttribute('data-p');
+      if(this.checked){if(ASSIGN[n].indexOf(p)<0)ASSIGN[n].push(p);}
+      else ASSIGN[n]=ASSIGN[n].filter(function(z){return z!==p;});
+    });
+  });
+}
+function nightOf(n){
+  var ret=[],exfo=[],gen=[];
+  ASSIGN[n].forEach(function(pid){
+    var p=null;PROD.forEach(function(q){if(q.id===pid)p=q;});
+    if(!p)return;
+    var seen={};
+    p.found.forEach(function(x){
+      if(seen[x.id])return;seen[x.id]=1;
+      if(x.id===RET)ret.push({p:p,lv:x.lv,raw:x.raw});
+      else if(EXFO.indexOf(x.id)>=0)exfo.push({p:p,raw:x.raw});
+      else if(GENTLE.indexOf(x.id)>=0)gen.push({p:p,raw:x.raw});
+    });
+  });
+  return {ret:ret,exfo:exfo,gen:gen,rest:!ret.length&&!exfo.length};
+}
+function calcStack(){
+  var box=document.getElementById('stackout');
+  if(!PROD.length){box.innerHTML='<p class="hint">先に製品を登録してください。</p>';return;}
+  var N=[];for(var n=0;n<7;n++)N.push(nightOf(n));
+
+  var h='<div class="chk"><div class="chk-hd"><span>NIGHTS</span><span>実際に乗るもの</span></div>';
+  for(var n=0;n<7;n++){
+    var x=N[n],prev=N[(n+6)%7];
+    h+='<div class="nrow'+(x.rest?' free':'')+'"><b>'+DAYS[n]+'</b>';
+    if(!ASSIGN[n].length){h+='割り当てがありません</div>';continue;}
+    if(x.rest){
+      h+='休ませる夜。レチノイドも角質ケアの酸も入っていません。';
+      if(x.gen.length)h+='<div class="warn" style="color:var(--ink3)">'+x.gen.map(function(g){return esc(g.raw)+'（'+esc(g.p.name)+'）';}).join('　')+' は入っていますが、角質をはがす方向ではないので、休ませる夜として数えています。</div>';
+      h+='</div>';continue;}
+    var parts=[];
+    x.ret.forEach(function(r){parts.push('<span class="who">'+esc(r.raw)+'</span>（'+esc(r.p.name)+'）'+(r.lv?'<span class="band">'+LVJ[r.lv]+'</span>':''));});
+    x.exfo.forEach(function(a){parts.push('<span class="who">'+esc(a.raw)+'</span>（'+esc(a.p.name)+'）');});
+    h+=parts.join('　');
+    if(x.gen.length)h+='<div style="font-size:12px;color:var(--ink3);margin-top:2px">ほかに '+x.gen.map(function(g){return esc(g.raw)+'（'+esc(g.p.name)+'）';}).join('　')+'</div>';
+    var w=[];
+    if(x.ret.length>1)w.push('レチノイドが'+x.ret.length+'つの製品から重なっています。どちらか片方でも足りるかもしれません。');
+    if(x.ret.length&&prev.ret.length)w.push('前の夜にもレチノイドが乗っています。');
+    if(x.ret.length&&x.exfo.length)w.push('レチノイドと角質ケアの酸が同じ夜です。刺激が出やすい組み合わせなので、様子を見ながら。');
+    if(w.length)h+='<div class="warn">'+w.join(' ')+'</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+
+  var retN=0,restN=0,run=0,best=0;
+  for(var n=0;n<7;n++){
+    if(N[n].ret.length){retN++;run++;if(run>best)best=run;}else run=0;
+    if(N[n].rest&&ASSIGN[n].length)restN++;
+  }
+  var wrapRun=run;for(var n=0;n<7&&N[n].ret.length;n++)wrapRun++;
+  if(wrapRun>best&&wrapRun<7)best=wrapRun;
+
+  h+='<div class="log" style="border-left-color:var(--ink2);background:var(--frost)"><ul>';
+  h+='<li><b>レチノイドが乗る夜は'+retN+'／7。</b>休ませる夜は'+restN+'、いちばん長い連続は'+best+'夜です。アゼライン酸は角質をはがす方向ではないので、休ませる夜の数には入れていません。</li>';
+  h+='<li>ここで数えているのは<b>夜の数だけ</b>です。同じ1夜でも、レチナールの夜とレチノール誘導体の夜では強さが違います。用量は成分表からはわからないので、そこはご自分の感覚のほうが正確です。</li>';
+  if(CUR&&CUR.ids.indexOf(RET)>=0){
+    h+='<li>上でつくった組み立てでは、レチノイドは別の回数で置いていました。ずれているのが悪いという話ではなく、<b>組み立ては目安、こちらが実際</b>です。</li>';
+  }
+  h+='<li>クリームやパックの中に攻めの成分が入っていることがあります。「保湿だけのつもりの夜」が実はそうではなかった、というのがここで見つかります。</li>';
+  h+='</ul></div>';
+  box.innerHTML=h;
+}
+function doExp(){
+  document.getElementById('io').value=JSON.stringify({p:PROD.map(function(x){return {n:x.name,t:x.text};}),a:ASSIGN});
+}
+function doImp(){
+  var e=document.getElementById('perr');
+  try{
+    var o=JSON.parse(document.getElementById('io').value);
+    PROD=[];PID=1;
+    o.p.forEach(function(x){var l=parseList(x.t);PROD.push({id:PID++,name:x.n,text:x.t,list:l,found:scanProduct(l)});});
+    ASSIGN=(o.a&&o.a.length===7)?o.a:[[],[],[],[],[],[],[]];
+    e.textContent='';renderProd();renderAssign();document.getElementById('stackout').innerHTML='';
+  }catch(err){e.textContent='読み込めませんでした。書き出したテキストをそのまま貼ってみてください。';}
+}
+document.getElementById('padd').addEventListener('click',pAdd);
+document.getElementById('calc').addEventListener('click',calcStack);
+document.getElementById('exp').addEventListener('click',doExp);
+document.getElementById('imp').addEventListener('click',doImp);
+renderProd();renderAssign();
+
+var SYM=[['red','赤みが出た',0],['sting','ヒリヒリする',0],['peel','皮むけ・粉ふき',0],['tight','急に乾く・つっぱる',0],
+         ['itch','かゆみが強い',1],['bump','ブツブツが増えた',1],['swell','腫れぼったい',1],['ooze','じくじく・水ぶくれ',1]];
+var tsel={};
+function strengthOf(p){
+  var s=0;
+  p.found.forEach(function(x){
+    if(x.id===RET)s=Math.max(s,x.lv==='strong'?4:x.lv==='mid'?3:1.5);
+    else if(EXFO.indexOf(x.id)>=0)s=Math.max(s,3.5);
+    else if(x.id==='vitc'&&x.lv==='strong')s=Math.max(s,2);
+    else if(GENTLE.indexOf(x.id)>=0)s=Math.max(s,0.5);
+  });
+  return s;
+}
+function initTrouble(){
+  var sd=document.getElementById('tday');
+  sd.innerHTML='';
+  DAYS.forEach(function(d,i){var o=document.createElement('option');o.value=i;o.textContent=d+'曜あたり';sd.appendChild(o);});
+  var b=document.getElementById('tsym');
+  SYM.forEach(function(x){
+    var lab=el('label','opt');
+    lab.innerHTML='<input type="checkbox" value="'+x[0]+'"><span>'+x[1]+'</span>';
+    lab.querySelector('input').addEventListener('change',function(){
+      if(this.checked)tsel[x[0]]=1;else delete tsel[x[0]];
+    });
+    b.appendChild(lab);
+  });
+}
+function tGo(){
+  var out=document.getElementById('tout'),day=+document.getElementById('tday').value;
+  var picked=SYM.filter(function(x){return tsel[x[0]];});
+  if(!picked.length){out.innerHTML='<p class="err">どんな感じかを選んでみてください。</p>';return;}
+  var flag=picked.some(function(x){return x[2];});
+  var h='';
+
+  if(flag){
+    h+='<div class="log"><ul><li><b>これは、成分の組み立てを直す話ではないかもしれません。</b>かゆみが強い、ブツブツが増えた、腫れぼったい、じくじくする。こういうときは、量や頻度を調整して様子を見るより、皮膚科で見てもらうほうが早く終わります。市販のもので粘る時間がいちばんもったいないです。<br>下は参考までに出しておきますが、迷ったら受診を優先してください。</li></ul></div>';
+  }
+
+  if(PROD.length&&ASSIGN.some(function(a){return a.length;})){
+    var back=[day,(day+6)%7,(day+5)%7],rows='';
+    back.forEach(function(n,k){
+      var x=nightOf(n),items=[];
+      x.ret.forEach(function(r){items.push(esc(r.raw)+'（'+esc(r.p.name)+'）'+(r.lv?'<span class="band">'+LVJ[r.lv]+'</span>':''));});
+      x.exfo.forEach(function(a){items.push(esc(a.raw)+'（'+esc(a.p.name)+'）');});
+      x.gen.forEach(function(g){items.push(esc(g.raw)+'（'+esc(g.p.name)+'）');});
+      if(!items.length)return;
+      rows+='<div class="nrow"><b>'+DAYS[n]+'</b><span style="font-size:12px;color:var(--ink3)">'+(k===0?'当日':k+'日前')+'</span><div style="margin-top:3px" class="who">'+items.join('　')+'</div></div>';
+    });
+    if(rows){
+      h+='<h3 style="margin:1.5rem 0 8px;font-family:var(--mincho);font-size:15px">直前に乗っていたもの</h3>';
+      h+='<div class="chk"><div class="chk-hd"><span>'+DAYS[day]+'曜の前後</span><span>3夜分</span></div>'+rows+'</div>';
+      h+='<p class="hint" style="margin-top:8px">このどれかが関係しているかもしれません。ただ、体調や気温、マスク、洗顔のこすり方でも同じことは起きます。決めつけずに、まず全部いったん休むのがいちばん早いです。</p>';
+    }else{
+      h+='<p class="hint" style="margin-top:1rem">直前3夜には、攻めの成分は乗っていませんでした。だとすると原因は別のところかもしれません。洗顔のこすりすぎ、新しく使いはじめたもの、体調、乾燥など。</p>';
+    }
+
+    var pause=PROD.filter(function(p){return strengthOf(p)>0;}).sort(function(a,b){return strengthOf(a)-strengthOf(b);});
+    var keep=PROD.filter(function(p){return strengthOf(p)===0;});
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:1.25rem">';
+    h+='<div><h3 style="margin:0 0 6px;font-family:var(--mincho);font-size:15px">しばらくお休み</h3><div class="log" style="border-left-color:var(--flag);background:var(--flag-bg);margin:0"><ul>';
+    if(pause.length)pause.slice().reverse().forEach(function(p){h+='<li>'+esc(p.name)+'</li>';});
+    else h+='<li>お休みが必要そうなものはありませんでした。</li>';
+    h+='</ul></div></div>';
+    h+='<div><h3 style="margin:0 0 6px;font-family:var(--mincho);font-size:15px">そのまま使えそう</h3><div class="log" style="border-left-color:var(--ink2);background:var(--frost);margin:0"><ul>';
+    if(keep.length)keep.forEach(function(p){h+='<li>'+esc(p.name)+'</li>';});
+    else h+='<li>登録したものは全部お休み側でした。この期間は、手持ちのいちばんシンプルな保湿だけで大丈夫です。</li>';
+    h+='</ul></div></div></div>';
+
+    h+='<h3 style="margin:1.5rem 0 8px;font-family:var(--mincho);font-size:15px">戻し方</h3><div class="log" style="border-left-color:var(--ink2);background:var(--frost)"><ul>';
+    h+='<li><b>まず、落ち着くまで全部おやすみ。</b>やさしい洗顔、保湿、朝の日焼け止めだけにします。物足りなく感じますが、この期間がいちばん効いています。アゼライン酸は角質をはがす方向ではありませんが、荒れているときはしみることがあるので、いったん一緒に休みます。</li>';
+    h+='<li><b>引いてから3〜4日おいてから、ひとつだけ戻します。</b>'+(pause.length?'いちばんおだやかな「'+esc(pause[0].name)+'」から、週1で。':'')+'すぐ全部戻すと、また同じところに戻ります。</li>';
+    h+='<li><b>2週間ようすを見て平気なら、次のひとつ。</b>'+(pause.length>1?'順番は '+pause.map(function(p){return esc(p.name);}).join(' → ')+' あたりが無理がないです。':'')+'</li>';
+    h+='<li>戻す途中でまた出たら、そのひとつが今の肌には早かった、というだけです。しばらく置いて、また試せます。</li>';
+    h+='</ul></div>';
+  }else{
+    h+='<div class="log" style="border-left-color:var(--ink2);background:var(--frost);margin-top:1rem"><ul>';
+    h+='<li>上の【夜に割り当てる】で、その週に使ったものを選んでおくと、直前に何が乗っていたかも一緒に見られます。</li>';
+    h+='<li>登録がなくても、やることは同じです。<b>レチノイドと酸をいったん全部おやすみ</b>して、やさしい洗顔・保湿・日焼け止めだけに。落ち着いてから3〜4日おいて、いちばん弱いものから週1で戻します。</li>';
+    h+='</ul></div>';
+  }
+
+  h+='<p class="hint" style="margin-top:1rem">数日たっても引かない、痛みが強い、顔以外にも出た、目のまわりが腫れた。このときは皮膚科へ。ここに書いてあることより確実です。</p>';
+  out.innerHTML=h;
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+document.getElementById('tgo').addEventListener('click',tGo);
+initTrouble();
+
+document.getElementById('go').addEventListener('click',function(){
+  var e=document.getElementById('err');
+  if(!Object.keys(sel).length){e.textContent='気になるところを1つ以上選んでください。';return;}
+  e.textContent='';build();
+});
+document.getElementById('clr').addEventListener('click',function(){
+  sel={};base='normal';exp='none';
+  document.querySelectorAll('#c-grid input').forEach(function(i){i.checked=false;});
+  radios(document.getElementById('b-grid'),BASE,base,function(v){base=v;});
+  radios(document.getElementById('x-grid'),EXP,exp,function(v){exp=v;});
+  refreshPrio();
+  document.getElementById('err').textContent='';
+  document.getElementById('out').className='';document.getElementById('out').innerHTML='';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
